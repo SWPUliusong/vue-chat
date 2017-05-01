@@ -22,7 +22,7 @@
                     <span class="chat-tip">没有更早的消息</span>
                 </div>
                 <div class="text-center padding-5" v-if="getMore">
-                    <i class="el-icon-arrow-down link" @click="getMoreMsg" title="获取更早的消息"></i>
+                    <i class="padding-5 el-icon-arrow-down link" @click="getMoreMsg" title="获取更早的消息"></i>
                 </div>
                 <div class="content clearfix padding-10" v-for="msg in messages">
                     <div class="text-center padding-5" v-if="msg.type==='system'">
@@ -73,7 +73,7 @@
             length() {
                 return this.$store.state.messages.length
             },
-            ...mapState(['user', 'currentOne', 'messages', 'activeList'])
+            ...mapState(['user', 'currentOne', 'messages', 'activeList', 'isChange'])
         },
         methods: {
             breakLine() {
@@ -120,10 +120,12 @@
             },
             length(newVal) {
                 if (!newVal) return
-                this.$nextTick(() => {
-                    let show = document.getElementById('show-area')
-                    show.scrollTop = show.scrollHeight
-                })
+                if (this.isChange) {
+                    this.$nextTick(() => {
+                        let show = document.getElementById('show-area')
+                        show.scrollTop = show.scrollHeight
+                    })
+                }
             }
         }
     }
@@ -156,10 +158,11 @@
     position: absolute;
     height: 150px;
     width: 100%;
-    background: rgb(205, 205, 205);
+    background: rgba(35, 35, 35, 0.9);
     top: 100%;
     left: 0;
     z-index: 10;
+    color: #fdfdfd;
     line-height: normal;
 }
 .member-item {
@@ -194,14 +197,14 @@
 .item-right {
     margin-right: 12px;
 }
-.content-item.item-right:after {
+.triangle.item-right:after {
     border-left-color: #b2e281;
     right: -12px;
 }
 .item-left {
     margin-left: 12px;
 }
-.content-item.item-left:after {
+.triangle.item-left:after {
     border-right-color: #b2e281;
     left: -12px;
 }
@@ -211,7 +214,7 @@
 .triangle:after {
     content: '';
     position: absolute;
-    top: 14px;
+    top: 24px;
     border: 6px solid transparent;
 }
 
