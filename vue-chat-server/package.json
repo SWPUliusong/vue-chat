@@ -1,0 +1,23 @@
+{
+  "name": "vue-chat-server",
+  "version": "1.0.0",
+  "description": "一个vuejs+socket.io的微信仿照版 ",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app",
+    "start": "pm2 start app.js --name wechat",
+    "restart": "pm2 restart wechat",
+    "stop": "pm2 stop wechat"
+  },
+  "author": "SWPUliusong",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "lodash": "^4.17.4",
+    "mongoose": "^4.9.6",
+    "socket.io": "^1.7.3"
+  },
+  "devDependencies": {
+    "pm2": "^2.4.6"
+  }
+}
