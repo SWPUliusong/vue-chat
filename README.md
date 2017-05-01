@@ -1,4 +1,4 @@
-# wechat
+# vue-chat
 vue + socket.io + mongodb 实现的一个仿网页版的微信
 
 # 拥有功能
