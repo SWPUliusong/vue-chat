@@ -18,10 +18,10 @@
                 </div>
             </div>
             <div class="show-area scrollbar" id="show-area">
-                <div class="text-center padding-5" v-if="notMore && messages.length>0">
+                <div class="text-center padding-5" v-if="notMore">
                     <span class="chat-tip">没有更早的消息</span>
                 </div>
-                <div class="text-center padding-5" v-if="getMore">
+                <div class="text-center padding-5" v-if="getMore && messages.length>0">
                     <i class="padding-5 el-icon-arrow-down link" @click="getMoreMsg" title="获取更早的消息"></i>
                 </div>
                 <div class="content clearfix padding-10" v-for="msg in messages">

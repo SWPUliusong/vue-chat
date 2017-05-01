@@ -16,8 +16,9 @@ export default {
             commit('setUser', { user })
         })
     },
-    signOut({ commit }) {
+    signOut({ commit, dispatch }) {
         commit('removeUser')
+        dispatch('setActiveList', 'friends')
     },
     setActiveList({ commit }, type) {
         commit('setActiveList', { type })

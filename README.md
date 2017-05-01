@@ -20,8 +20,8 @@ vue + socket.io + mongodb 实现的一个仿网页版的微信
  - 拉取消息
 
 # 目录内容
-vue-chat-doument下存放开发文档
-
-vue-chat-client下存放的是vue搭建的前端页面,默认启动在8080端口
-
-vue-chat-server下存放socket.io+monogdb搭建的服务端,默认启动在3002端口
+```
+|-vue-chat-client   vue搭建的前端页面,监听8080端口
+|-vue-chat-doument  开发文档
+ㄴvue-chat-server   socket.io+monogdb搭建的服务端,监听3002端口
+```
