@@ -29,7 +29,10 @@
         </li>
         <li class="item link hover-black" :class="{active: currentOne._id == item._id}" 
         v-for="item in list" @click="changeActiveOne(item)">
-          <img :src="item.avatar" class="avatar">
+          <img v-if="!count[item._id]" :src="item.avatar" class="avatar">
+          <el-badge :value="count[item._id]" :max="99" v-else>
+            <img :src="item.avatar" class="avatar">
+          </el-badge>
           <span :title="item.name" class="name text-white">{{item.name}}</span>
         </li>
       </ul>
@@ -87,7 +90,7 @@
         keyword: ''
       }
     },
-    computed: mapState(['list', 'user', 'result', 'activeList', 'currentOne']),
+    computed: mapState(['list', 'user', 'result', 'activeList', 'currentOne', 'count']),
     methods: {
       isArray: _.isArray,
       addDialog(){

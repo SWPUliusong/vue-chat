@@ -48,9 +48,9 @@ export default {
             })
         })
     },
-    searchUsers(keyword) {
+    searchUsers({keyword, from}) {
         return new Promise((res, rej) => {
-            socket.emit('searchUsers', { keyword })
+            socket.emit('searchUsers', { keyword, from })
             socket.once('searchUsers', data => {
                 if (data.msg || data.message) return rej(data)
                 return res(data)
@@ -75,11 +75,13 @@ export default {
             })
         })
     },
-    addGroup(params) {
+    addGroup(params, listener) {
         return new Promise((res, rej) => {
             socket.emit('addGroup', params)
             socket.once('addGroup', data => {
                 if (data.msg || data.message) return rej(data)
+                
+                socket.on(params.groupId, listener)
                 return res(data)
             })
         })
@@ -116,6 +118,7 @@ export default {
     },
     removeGroup(params) {
         return new Promise((res, rej) => {
+            socket.removeAllListeners(params.groupId)
             socket.emit('removeGroup', params)
             socket.once('removeGroup', data => {
                 if (data.msg || data.message) return rej(data)

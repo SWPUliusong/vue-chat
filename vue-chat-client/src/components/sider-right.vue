@@ -119,7 +119,9 @@
                 this.$store.dispatch('pullMsg', this.page)
             },
             length(newVal) {
+                let elem = document.getElementById('show-area')
                 if (!newVal) return
+                if (!elem) return 
                 if (this.isChange) {
                     this.$nextTick(() => {
                         let show = document.getElementById('show-area')

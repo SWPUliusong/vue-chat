@@ -41,8 +41,11 @@ export default {
             return dispatch('getList')
         })
     },
-    searchUsers({ commit }, keyword) {
-        return ws.searchUsers(keyword).then(result => {
+    searchUsers({ state, commit }, keyword) {
+        return ws.searchUsers({ 
+            keyword, 
+            from: state.user._id
+        }).then(result => {
             commit('setResult', { result })
         })
     },
@@ -55,6 +58,24 @@ export default {
         return ws.addGroup({
             from: state.user._id,
             groupId
+        }, ({ from, data }) => {
+            if (data.type) return
+            if (from !== state.user._id) {
+                let notice = document.getElementById('notice')
+                notice.play()
+            }
+            if (groupId === state.currentOne._id) {
+                state.messages.push(data)
+            } else {
+                if (_.isString(state.count)) {
+                    state.count = { [groupId]: 1 }
+                } else {
+                    let count = state.count[groupId]
+                    state.count = _.assign(state.count, {
+                        [groupId]: count ? ++count : 1
+                    })
+                }
+            }
         }).then(() => {
             return dispatch('getList')
         })
@@ -110,9 +131,16 @@ export default {
         }
     },
     removeFriend({ commit, state, dispatch }) {
+        let id = state.currentOne._id
         let params = {
             from: state.user._id,
-            friendId: state.currentOne._id
+            friendId: id
+        }
+
+        if (state.count[id]) {
+            state.count = _.assign(state.count, {
+                [id]: 0
+            })
         }
 
         return ws.removeFriend(params).then(() => {
@@ -121,9 +149,16 @@ export default {
         })
     },
     removeGroup({ commit, state, dispatch }) {
+        let id = state.currentOne._id
         let params = {
             from: state.user._id,
-            groupId: state.currentOne._id
+            groupId: id
+        }
+
+        if (state.count[id]) {
+            state.count = _.assign(state.count, {
+                [id]: 0
+            })
         }
 
         return ws.removeGroup(params).then(() => {

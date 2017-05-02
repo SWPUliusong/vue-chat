@@ -1,6 +1,6 @@
 const User = require("../models").User
 
-module.exports = socket => ({ keyword }) => {
+module.exports = socket => ({ from, keyword }) => {
     User
         .find({
             name: {$regex: new RegExp(keyword)}
@@ -10,7 +10,7 @@ module.exports = socket => ({ keyword }) => {
         .exec()
         .then(users => {
             if (!users) return []
-            return users
+            return users.filter(item => item._id.toString() !== from)
         })
         .then(list => {
             socket.emit('searchUsers', list)

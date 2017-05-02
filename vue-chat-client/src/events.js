@@ -12,9 +12,9 @@ socket.on('addFriend', ({ friendId }) => {
 socket.on('removeFriend', ({ from, friendId }) => {
     let { user, activeList, currentOne } = store.state
     if (user && user._id == friendId && activeList === 'friends') {
-        store.dispatch('getList') 
+        store.dispatch('getList')
     }
-    if(from === currentOne._id) {
+    if (from === currentOne._id) {
         store.commit('removeCurrentOne')
     }
     return
