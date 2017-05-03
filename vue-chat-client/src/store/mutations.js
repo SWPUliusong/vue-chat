@@ -110,7 +110,6 @@ export default {
         state.currentOne = item
     },
     removeCurrentOne(state) {
-        socket.removeAllListeners(state.currentOne._id)
         state.currentOne = ''
         state.messages = []
     },
