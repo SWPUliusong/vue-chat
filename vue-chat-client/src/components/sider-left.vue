@@ -52,8 +52,10 @@
           <li class="padding-top-bottom-8 text-left clearfix" v-for="item in result">
             <img :src="item.avatar" class="avatar">
             <span :title="item.name" class="name">{{item.name}}</span>
-            <span class="el-icon-plus pull-right text-init link" 
-            title="添加好友" @click="addGroup(item)"></span>
+            
+            <el-button v-if="isExist.indexOf(item._id) < 0" type="info" 
+            class="pull-right text-init link" @click="addGroup(item)">加入</el-button>
+            <el-button :disabled="true" class="pull-right text-init link" v-else>存在</el-button>
           </li>
         </ul>
         <p v-if="isArray(result) && result.length < 1" class="padding-10">没有相关群组</p>
@@ -66,8 +68,9 @@
           <li class="padding-top-bottom-8 text-left clearfix" v-for="item in result">
             <img :src="item.avatar" class="avatar">
             <span :title="item.name" class="name">{{item.name}}</span>
-            <span class="el-icon-plus pull-right text-init link" 
-            title="添加好友" @click="addFriend(item)"></span>
+            <el-button v-if="isExist.indexOf(item._id) < 0" type="info" 
+            class="pull-right text-init link" @click="addFriend(item)">添加</el-button>
+            <el-button :disabled="true" class="pull-right text-init link" v-else>存在</el-button>
           </li>
         </ul>
         <p v-if="isArray(result) && result.length < 1" class="padding-10">没有相关用户</p>
@@ -146,6 +149,9 @@
         if(newVal === false) this.keyword = ''
         return
       },
+      list(newVal) {
+          this.isExist = _.map(newVal, '_id')
+      }
     }
   }
 </script>
