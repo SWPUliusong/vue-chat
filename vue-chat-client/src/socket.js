@@ -1,4 +1,4 @@
 // 连接webSocket
-const socket = io.connect("localhost:3002")
+const socket = io.connect("/vue-chat")
 
 export default socket
