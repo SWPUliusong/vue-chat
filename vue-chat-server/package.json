@@ -5,9 +5,9 @@
   "main": "app.js",
   "scripts": {
     "test": "node app",
-    "start": "pm2 start app.js --name wechat",
-    "restart": "pm2 restart wechat",
-    "stop": "pm2 stop wechat"
+    "start": "pm2 start app.js --name vue-chat-server",
+    "restart": "pm2 restart vue-chat-server",
+    "stop": "pm2 stop vue-chat-server"
   },
   "author": "SWPUliusong",
   "license": "ISC",

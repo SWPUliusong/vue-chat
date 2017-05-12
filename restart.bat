@@ -1,0 +1,1 @@
+cd ./vue-chat-server && npm run restart && cd ../vue-chat-client && npm run restart

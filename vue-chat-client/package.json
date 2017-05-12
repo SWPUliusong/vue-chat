@@ -6,7 +6,9 @@
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
-    "start": "node build/dev-server.js",
+    "start": "pm2 start build/dev-server.js --name vue-chat-client",
+    "stop": "pm2 stop vue-chat-client",
+    "restart": "pm2 restart vue-chat-client",
     "build": "node build/build.js"
   },
   "dependencies": {
@@ -38,6 +40,7 @@
     "opn": "^4.0.2",
     "optimize-css-assets-webpack-plugin": "^1.3.0",
     "ora": "^1.2.0",
+    "pm2": "^2.4.6",
     "rimraf": "^2.6.0",
     "semver": "^5.3.0",
     "shelljs": "^0.7.6",
