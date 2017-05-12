@@ -33,8 +33,9 @@ module.exports = {
         changeOrigin: true,
       },
       '/vue-chat': {
-        target: 'ws://localhost:3002',
+        target: 'http://localhost:3002',
         changeOrigin: true,
+        ws: true,
         pathRewrite: {
           '^/vue-chat': ''
         }
