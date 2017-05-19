@@ -12,7 +12,7 @@ module.exports = socket => ({ from, data }) => {
         socket.emit('modifyAvatar', { status: 400, msg: '参数from缺失' })
     }
 
-    let filename = `${createNameByBuffer(data.file)}.${data.type}`
+    let filename = `temp/${createNameByBuffer(data.file)}.${data.type}`
 
     let url = path.resolve(process.cwd(), `./static/${filename}`)
     fs.writeFile(url, data.file, err => {
