@@ -5,4 +5,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# 图片
 temp/
+
+# 日志文件
+error.log
+access.log
