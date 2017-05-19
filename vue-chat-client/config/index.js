@@ -30,15 +30,12 @@ module.exports = {
     proxyTable: {
       '/socket.io': {
         target: 'http://localhost:3002',
+        ws: true,
         changeOrigin: true,
       },
-      '/vue-chat': {
+      '/img': {
         target: 'http://localhost:3002',
         changeOrigin: true,
-        ws: true,
-        pathRewrite: {
-          '^/vue-chat': ''
-        }
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"

@@ -6,9 +6,12 @@ module.exports = socket => ({ from, data }) => {
     }
 
     User
-        .update({ _id: from }, _.pick(data, ['name', 'avatar', 'password']))
-        .then(() => {
-            socket.emit('updateUser', {})
+        .findByIdAndUpdate(from, _.pick(data, ['name', 'password']))
+        .exec()
+        .then(user => {
+            let body = _.assign(user.toObject(), _.pick(data, ['name', 'password']))
+
+            socket.emit('updateUser', body)
         })
         .catch(err => {
             socket.emit('updateUser', err)

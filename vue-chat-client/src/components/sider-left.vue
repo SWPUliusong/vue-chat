@@ -2,7 +2,7 @@
     <div class="sider-left">
       <ul class="list">
         <li class="item">
-          <img :src="user.avatar" class="avatar">
+          <img :src="user.avatar" @click="modifyDialog=true" class="avatar link">
           <span class="name text-white">
             {{user.name}} 
             <i @click="signOut" class="el-icon-circle-cross text-red" title="退出"></i>
@@ -37,6 +37,29 @@
         </li>
       </ul>
 
+      <!--个人资料-->
+      <el-dialog size="tiny" class="text-center" v-model="modifyDialog">
+        <div @click.self="finishedModify">
+          <avatar-reset></avatar-reset>
+          <div class="padding-15">
+            <h3>个人资料 <span class="link el-icon-edit" @click.stop="allowedModify"></span></h3>
+          </div>
+          <el-form :model="userParams">
+            <el-form-item label="用户名称" label-width="80px">
+              <el-input v-model="userParams.name" :disabled="!isModify"></el-input>
+            </el-form-item>
+            <el-form-item label="用户密码" label-width="80px">
+              <el-input v-model="userParams.password" :disabled="!isModify"></el-input>
+            </el-form-item>
+            <el-form-item v-if="isModify">
+              <el-button class="addBtn" type="primary" @click="updateUser"
+              :disabled="userParams.password==user.password&&userParams.name==user.name">修改资料</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+      </el-dialog>
+
+
       <!--添加群组-->
       <el-dialog size="tiny" class="text-center" v-model="groupDialog"
       title="添加群组" >
@@ -60,6 +83,8 @@
         </ul>
         <p v-if="isArray(result) && result.length < 1" class="padding-10">没有相关群组</p>
       </el-dialog>
+
+
       <!--添加好友-->
       <el-dialog size="tiny" class="text-center" v-model="friendDialog"
       title="添加好友" >
@@ -81,21 +106,36 @@
 <script>
   import { mapState, mapActions } from 'vuex'
   import Vue from 'vue'
+  import avatarReset from './avatar-reset'
 
   export default {
     created() {
       this.$store.dispatch('getList')
+      this.userParams = _.pick(this.$store.state.user, ['avatar', 'name', 'password'])
     },
+    components: { avatarReset },
     data() {
       return {
         groupDialog: false,
         friendDialog: false,
-        keyword: ''
+        modifyDialog: false,
+        keyword: '',
+        isModify: false,
+        userParams: ""
       }
     },
-    computed: mapState(['list', 'user', 'result', 'activeList', 'currentOne', 'count']),
+    computed: {
+      ...mapState(['list', 'user', 'result', 'activeList', 'currentOne', 'count'])
+    },
     methods: {
       isArray: _.isArray,
+      allowedModify() {
+        return this.isModify = true
+      },
+      finishedModify() {
+        this.userParams = _.pick(this.$store.state.user, ['avatar', 'name', 'password'])
+        return this.isModify = false
+      },
       addDialog(){
         if ('friends' === this.activeList) {
           this.friendDialog = true
@@ -131,6 +171,12 @@
       },
       addFriend(item) {
         this.$store.dispatch('addFriend', item._id).then(() => this.friendDialog = false)
+      },
+      updateUser() {
+        this.$store.dispatch('updateUser', this.userParams).then(() => {
+          this.isModify = false
+          this.userParams = _.pick(this.$store.state.user, ['avatar', 'name', 'password'])
+        })
       },
       ...mapActions(['signOut']),
     },

@@ -42,8 +42,8 @@ export default {
         })
     },
     searchUsers({ state, commit }, keyword) {
-        return ws.searchUsers({ 
-            keyword, 
+        return ws.searchUsers({
+            keyword,
             from: state.user._id
         }).then(result => {
             commit('setResult', { result })
@@ -169,5 +169,32 @@ export default {
     getGroupMember({ state }) {
         let groupId = state.currentOne._id
         return ws.getGroupMember({ groupId }).then(({ data }) => data)
+    },
+    updateUser({ state, commit }, data) {
+        let params = {
+            from: state.user._id,
+            data
+        }
+
+        return ws.updateUser(params).then(user => {
+            commit('setUser', { user })
+            return user
+        })
+    },
+    modifyAvatar({ state, commit }, data) {
+        let params = {
+            from: state.user._id,
+            data
+        }
+
+        return ws.modifyAvatar(params).then(user => commit('setUser', { user }))
+    },
+    uploadImg({ state, commit }, data) {
+        let params = {
+            from: state.user._id,
+            data
+        }
+
+        return ws.uploadImg(params)
     }
 }

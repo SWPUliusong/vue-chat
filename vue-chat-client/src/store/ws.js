@@ -48,7 +48,7 @@ export default {
             })
         })
     },
-    searchUsers({keyword, from}) {
+    searchUsers({ keyword, from }) {
         return new Promise((res, rej) => {
             socket.emit('searchUsers', { keyword, from })
             socket.once('searchUsers', data => {
@@ -80,7 +80,7 @@ export default {
             socket.emit('addGroup', params)
             socket.once('addGroup', data => {
                 if (data.msg || data.message) return rej(data)
-                
+
                 socket.on(params.groupId, listener)
                 return res(data)
             })
@@ -130,6 +130,33 @@ export default {
         return new Promise((res, rej) => {
             socket.emit('getGroupMember', params)
             socket.once('getGroupMember', data => {
+                if (data.msg || data.message) return rej(data)
+                return res(data)
+            })
+        })
+    },
+    updateUser(params) {
+        return new Promise((res, rej) => {
+            socket.emit('updateUser', params)
+            socket.once('updateUser', data => {
+                if (data.msg || data.message) return rej(data)
+                return res(data)
+            })
+        })
+    },
+    modifyAvatar(params) {
+        return new Promise((res, rej) => {
+            socket.emit('modifyAvatar', params)
+            socket.once('modifyAvatar', data => {
+                if (data.msg || data.message) return rej(data)
+                return res(data)
+            })
+        })
+    },
+    uploadImg(params) {
+        return new Promise((res, rej) => {
+            socket.emit('uploadImg', params)
+            socket.once('uploadImg', data => {
                 if (data.msg || data.message) return rej(data)
                 return res(data)
             })

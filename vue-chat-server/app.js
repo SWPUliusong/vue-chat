@@ -1,7 +1,24 @@
 global._ = require("lodash")
 global.Promise = require("bluebird")
 
-let server = require('http').createServer()
+const http = require('http')
+const fs = require('fs')
+
+let types = {
+    'jpg': 'image/jpeg', 
+    'gif': 'image/gif',
+    'png': 'image/png'
+}
+
+let server = http.createServer((req, res) => {
+    let url = req.url
+    if (/^\/img\//.test(url)) {
+        let ext = url.substring(url.lastIndexOf('.'))
+        res.writeHead(200, {'content-type': types[ext]})
+        fs.createReadStream(`./static/${url.replace('/img/', '')}`).pipe(res)
+    }
+})
+
 let io = require('socket.io')(server);
 let eventsMap = require("./eventsMap")('./events')
 
