@@ -7,6 +7,11 @@ function createNameByBuffer(buffer) {
     return crypto.createHash('md5').update(buffer).digest('hex')
 }
 
+// 判断temp文件夹是否存在，不存在则创建
+if (!fs.existsSync('./static/temp')) {
+    fs.mkdirSync('./static/temp')
+}
+
 module.exports = socket => ({ from, data }) => {
     if (!from) {
         socket.emit('modifyAvatar', { status: 400, msg: '参数from缺失' })
