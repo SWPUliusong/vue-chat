@@ -2,9 +2,12 @@
     <div class="sider-right" v-if="currentOne">
         <div class="message-show">
             <div class="avatar-area clearfix">
-                <span @mouseenter="getGroupMember" @mouseleave="showMember=false">
+                <span @mouseleave="showMember=false">
                     {{currentOne.name}}
-                    <i v-if="activeList == 'groups'" :class="showMember?'el-icon-caret-top':'el-icon-caret-bottom'"></i>
+                    <i class="link"
+                    @mouseenter="getGroupMember"
+                    v-if="activeList == 'groups'" 
+                    :class="showMember?'el-icon-caret-top':'el-icon-caret-bottom'"></i>
                 </span>
                 <p class="pull-right padding-right-15">
                     <el-button @click="quit" type="danger">{{activeList=='friends'?'删除好友':'退出群组'}}</el-button>
@@ -50,11 +53,11 @@
                 <div class="pull-left options options-img">
                     <i class="el-icon-picture"></i>
                     <form id="options-img-file">
-                        <input @change="sendFile($event)" class="options-img-file" type="file" accept="image/jpeg, image/gif, image/png">
+                        <input @change="sendFile($event.target.files[0])" class="options-img-file" type="file" accept="image/jpeg, image/gif, image/png">
                     </form>
                 </div>
             </div>
-            <textarea class="scrollbar" v-model="content" @keydown.enter.stop.prevent="submitMsg()" @keydown.ctrl.stop.prevent="breakLine($event)"></textarea>
+            <textarea id="message-content" class="scrollbar" v-model="content" @keydown.enter.stop.prevent="submitMsg()" @keydown.ctrl.stop.prevent="breakLine($event)"></textarea>
             <div class="post-btn clearfix">
                 <p>
                     <span class="post-tip">enter键发送,ctrl键换行</span>
@@ -71,19 +74,20 @@ export default {
     data() {
         return {
             content: '',
-            page: 1,
-            getMore: true,
-            notMore: false,
-            showMember: false,
-            members: '',
-            facesShow: false
+            page: 1,    // 按照时间降序获取的消息页码
+            getMore: true,  // 是否显示下拉消息按钮
+            isBeingGetMore: false,  // 是否正在获取之前的消息
+            notMore: false,     // 没有更多消息
+            showMember: false,  // 是否显示成员
+            members: '',    // 成员
+            facesShow: false    // 是否显示泡泡表情
         }
     },
     computed: {
         length() {
             return this.$store.state.messages.length
         },
-        ...mapState(['user', 'currentOne', 'messages', 'activeList', 'isChange', 'faces'])
+        ...mapState(['user', 'currentOne', 'messages', 'activeList', 'faces'])
     },
     methods: {
         breakLine($e) {
@@ -94,12 +98,14 @@ export default {
         submitMsg(content) {
             let ctt = content || this.content
             if (!ctt) return
+            this.isBeingGetMore = false
             this.$store.dispatch('pushMsg', ctt)
             if (ctt == this.content) {
                 this.content = ''
             }
         },
         getMoreMsg() {
+            this.isBeingGetMore = true
             this.$store.commit('notChange')
             this.$store
                 .dispatch('pullMsg', ++this.page)
@@ -123,57 +129,38 @@ export default {
             this.$store.dispatch('getGroupMember').then(members => this.members = members)
         },
         chooseFace(face) {
+            let inputElem = document.getElementById('message-content')
             let img = `<img src="${face}">`
             this.facesShow = false
-            this.content += img
-            console.log(this.content)
+            this.submitMsg(img)
+            inputElem.focus()
         },
-        fileValid(file) {
-            let types = ['image/jpeg', 'image/gif', 'image/png']
-            let res = {
-                flag: true
-            }
-            if (types.indexOf(file.type) < 0) {
-                res.flag = false
-                res.msg = '文件类型只能是gif，png，jpg'
-            } else if (file.size > 500 * 1024) {
-                res.flag = false
-                res.msg = '文件大小不得超过500K'
-            }
-
-            return res
-        },
-        sendFile($e) {
-            let file = $e.target.files[0]
+        sendFile(file) {
 
             if (!file) return
 
+            // 用作清空文件input
             let fileElem = document.getElementById('options-img-file')
-            let valid = this.fileValid(file)
+            // 用作聚焦输入框
+            let inputElem = document.getElementById('message-content')
 
+            let valid = this.fileValid(file, 1024)
             if (!valid.flag) {
                 alert(valid.msg)
                 return
             }
 
-            let types = {
-                'image/jpeg': 'jpg',
-                'image/gif': 'gif',
-                'image/png': 'png'
-            }
-
             this.$store
                 .dispatch('uploadImg', {
                     file,
-                    type: types[file.type]
+                    type: this.fileValid.types[file.type]
                 })
                 .then(url => {
                     fileElem.reset();
                     let img = `<img src="${url.img}">`
                     this.submitMsg(img)
+                    inputElem.focus()
                 })
-
-
         }
     },
     watch: {
@@ -188,10 +175,9 @@ export default {
             let elem = document.getElementById('show-area')
             if (!newVal) return
             if (!elem) return
-            if (this.isChange) {
+            if (!this.isBeingGetMore) {
                 this.$nextTick(() => {
-                    let show = document.getElementById('show-area')
-                    show.scrollTop = show.scrollHeight
+                    elem.scrollTop = elem.scrollHeight
                 })
             }
         }

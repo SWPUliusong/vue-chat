@@ -1,6 +1,4 @@
-
-// 连接webSocket
-import socket from '../socket'
+import { socket } from './socket'
 
 export default {
     getUser(from) {

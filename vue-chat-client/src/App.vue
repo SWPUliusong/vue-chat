@@ -9,7 +9,6 @@
 </template>
 
 <script>
-  import './socket'
   import { mapState } from 'vuex'
   import siderLeft from './components/sider-left'
   import siderRight from './components/sider-right'

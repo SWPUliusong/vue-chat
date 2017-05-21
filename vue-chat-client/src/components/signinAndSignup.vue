@@ -9,9 +9,8 @@
             <el-form-item label="密码">
             <el-input type="password" v-model="params.password"></el-input>
             </el-form-item>
-            <el-form-item>
-            <el-button type="success" @click="activeCard='signup'">注册</el-button>
-            <el-button :disabled="!btnActive" type="primary" @click="signIn()">登录</el-button>
+            <el-form-item label-width="40px">
+            <el-button class="fullBtn" :disabled="!btnActive" type="primary" @click="signIn()">登录</el-button>
             </el-form-item>
         </el-form>
         </el-tab-pane>
@@ -26,9 +25,8 @@
             <el-form-item label="密码">
             <el-input type="password" :maxlength="14" v-model="params.password"></el-input>
             </el-form-item>
-            <el-form-item>
-            <el-button type="primary" @click="activeCard='signin'">登录</el-button>
-            <el-button :disabled="!btnActive || !params.name" type="success" @click="signUp()">注册</el-button>
+            <el-form-item label-width="40px">
+            <el-button class="fullBtn" :disabled="!btnActive || !params.name" type="success" @click="signUp()">注册</el-button>
             </el-form-item>
         </el-form>
         </el-tab-pane>
@@ -37,7 +35,7 @@
     <!--错误提示-->
     <el-dialog class="text-center" title="错误提示" v-model="errorTip" size="tiny">
         <span>{{error.msg}}</span>
-        <span slot="footer" class="dialog-footer">
+        <span slot="footer" class="clearfix">
             <el-button type="primary" @click="errorTip = false">确 定</el-button>
         </span>
     </el-dialog>
@@ -73,6 +71,8 @@
 
         if (!email.test(params.email)) {
           params.email = ''
+          this.errorTip = true
+          this.error = {msg: '邮箱格式错误'}
           return
         }
 
@@ -118,6 +118,9 @@
 }
 .upInOut .el-button:last-child {
   float: right;
+}
+.fullBtn {
+  width: 100%;
 }
 
 </style>

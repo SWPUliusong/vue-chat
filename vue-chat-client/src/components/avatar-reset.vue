@@ -4,7 +4,7 @@
         <div class="avatar-shadow">更换头像</div>
         <input type="file" 
         accept="image/jpeg,image/gif,image/png"
-        class="avatar-file" @change="modifyAvatar($event)">
+        class="avatar-file" @change="modifyAvatar($event.target.files[0])">
     </div>
 </template>
 
@@ -57,43 +57,20 @@
     export default {
         computed: mapState(['user']),
         methods: {
-            modifyAvatar($e) {
-                let file = $e.target.files[0]
+            modifyAvatar(file) {
 
                 if (!file) return
 
                 let valid = this.fileValid(file)
-                
                 if (!valid.flag) {
                     alert(valid.msg)
                     return
                 }
-
-                let types = {
-                    'image/jpeg': 'jpg', 
-                    'image/gif': 'gif', 
-                    'image/png': 'png'
-                }
                 
                 this.$store.dispatch('modifyAvatar', { 
                     file,
-                    type: types[file.type]
+                    type: this.fileValid.types[file.type]
                 })
-            },
-            fileValid(file) {
-                let types = ['image/jpeg', 'image/gif', 'image/png']
-                let res = {
-                    flag: true
-                }
-                if (types.indexOf(file.type) < 0) {
-                    res.flag = false
-                    res.msg = '文件类型只能是gif，png，jpg'
-                } else if (file.size > 100 * 1024) {
-                    res.flag = false
-                    res.msg = '文件大小不得超过100K'
-                }
-
-                return res
             }
         }
     }

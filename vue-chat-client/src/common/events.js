@@ -1,5 +1,5 @@
-import store from './store'
-import socket from './socket'
+import store from '@/store'
+import { socket } from './socket'
 
 socket.on('addFriend', ({ friendId }) => {
     let { user, activeList } = store.state

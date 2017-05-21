@@ -1,4 +1,7 @@
-import ws from './ws'
+import { addGroupsListener, addUserListener, removeGroupAndUserListeners } from '@/common/socket'
+import ws from '@/common/ws'
+
+
 
 export default {
     getUser({ commit, state }) {
@@ -6,8 +9,12 @@ export default {
             commit('setUser', { user })
         })
     },
-    signIn({ commit }, payload) {
+    signIn({ state, commit }, payload) {
         return ws.signIn(payload).then(user => {
+            // 初始化用户监听器
+            addUserListener(user, state)
+            // 初始化群组监听器
+            addGroupsListener(user, state)
             commit('setUser', { user })
         })
     },
@@ -16,9 +23,9 @@ export default {
             commit('setUser', { user })
         })
     },
-    signOut({ commit, dispatch }) {
+    signOut({ state, commit, dispatch }) {
+        ws.getUser(state.user._id).then(removeGroupAndUserListeners)
         commit('removeUser')
-        dispatch('setActiveList', 'friends')
     },
     setActiveList({ commit }, type) {
         commit('setActiveList', { type })
