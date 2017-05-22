@@ -1,4 +1,11 @@
-import { addGroupsListener, addUserListener, removeGroupAndUserListeners } from '@/common/socket'
+import { 
+    addGroupsListener, 
+    addUserListener, 
+    removeGroupAndUserListeners, 
+    addSingleGroupListener,
+    removeSingleGroupListener
+} from '@/common/socket'
+
 import ws from '@/common/ws'
 
 
@@ -20,6 +27,8 @@ export default {
     },
     signUp({ commit }, payload) {
         return ws.signUp(payload).then(user => {
+            addUserListener(user, state)
+            addGroupsListener(user, state)
             commit('setUser', { user })
         })
     },
@@ -44,7 +53,8 @@ export default {
         return ws.createGroup({
             from: state.user._id,
             data: { name: keyword }
-        }).then(() => {
+        }).then(({ groupId }) => {
+            addSingleGroupListener(groupId, state)
             return dispatch('getList')
         })
     },
@@ -62,27 +72,10 @@ export default {
         })
     },
     addGroup({ state, dispatch }, groupId) {
+        addSingleGroupListener(groupId, state)
         return ws.addGroup({
             from: state.user._id,
             groupId
-        }, ({ from, data }) => {
-            if (data.type) return
-            if (from !== state.user._id) {
-                let notice = document.getElementById('notice')
-                notice.play()
-            }
-            if (groupId === state.currentOne._id) {
-                state.messages.push(data)
-            } else {
-                if (_.isString(state.count)) {
-                    state.count = { [groupId]: 1 }
-                } else {
-                    let count = state.count[groupId]
-                    state.count = _.assign(state.count, {
-                        [groupId]: count ? ++count : 1
-                    })
-                }
-            }
         }).then(() => {
             return dispatch('getList')
         })
@@ -161,6 +154,9 @@ export default {
             from: state.user._id,
             groupId: id
         }
+
+        // 同时移除群组的消息监听
+        removeSingleGroupListener(id)
 
         if (state.count[id]) {
             state.count = _.assign(state.count, {

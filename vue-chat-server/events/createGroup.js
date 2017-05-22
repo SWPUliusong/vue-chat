@@ -8,10 +8,12 @@ module.exports = socket => ({ from, data }) => {
             member: [from]
         })
         .then(group => {
-            return User.update({_id: from}, {$addToSet: {groups: group._id}})
+            return User
+                    .update({ _id: from }, { $addToSet: { groups: group._id } })
+                    .then(() => group._id)
         })
-        .then(() => {
-            socket.emit('createGroup', {})
+        .then(groupId => {
+            socket.emit('createGroup', { groupId })
         })
         .catch(err => {
             socket.emit('createGroup', err)

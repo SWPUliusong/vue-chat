@@ -37,7 +37,7 @@
         </li>
       </ul>
 
-      <!--个人资料-->
+      <!--修改个人资料-->
       <el-dialog size="tiny" class="text-center" v-model="modifyDialog">
         <div @click.self="finishedModify">
           <avatar-reset></avatar-reset>
@@ -53,7 +53,7 @@
             </el-form-item>
             <el-form-item v-if="isModify">
               <el-button class="addBtn" type="primary" @click="updateUser"
-              :disabled="userParams.password==user.password&&userParams.name==user.name">修改资料</el-button>
+              :disabled="disabledBtn">修改资料</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -125,6 +125,12 @@
       }
     },
     computed: {
+      disabledBtn() {
+        return (this.userParams.password==this.user.password
+               && this.userParams.name==this.user.name) || 
+               !this.userParams.password || 
+               !this.userParams.name
+      },
       ...mapState(['list', 'user', 'result', 'activeList', 'currentOne', 'count'])
     },
     methods: {
@@ -174,8 +180,7 @@
       },
       updateUser() {
         this.$store.dispatch('updateUser', this.userParams).then(() => {
-          this.isModify = false
-          this.userParams = _.pick(this.$store.state.user, ['avatar', 'name', 'password'])
+          this.finishedModify()
         })
       },
       ...mapActions(['signOut']),
@@ -197,6 +202,9 @@
       },
       list(newVal) {
           this.isExist = _.map(newVal, '_id')
+      },
+      modifyDialog() {
+        this.finishedModify()
       }
     }
   }

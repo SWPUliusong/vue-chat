@@ -56,4 +56,39 @@ function removeGroupAndUserListeners(user) {
     })
 }
 
-export { socket, addGroupsListener, addUserListener, removeGroupAndUserListeners }
+// 为单个群组添加监听
+function addSingleGroupListener(groupId, state) {
+    socket.on(groupId, ({ from, data }) => {
+        if (data.type) return
+        if (from !== state.user._id) {
+            let notice = document.getElementById('notice')
+            notice.play()
+        }
+        if (groupId === state.currentOne._id) {
+            state.messages.push(data)
+        } else {
+            if (_.isString(state.count)) {
+                state.count = { [groupId]: 1 }
+            } else {
+                let count = state.count[groupId]
+                state.count = _.assign(state.count, {
+                    [groupId]: count ? ++count : 1
+                })
+            }
+        }
+    })
+}
+
+// 删除单个群组的监听
+function removeSingleGroupListener(groupId) {
+    socket.removeAllListeners(groupId)
+}
+
+export { 
+    socket, 
+    addGroupsListener, 
+    addUserListener, 
+    removeGroupAndUserListeners, 
+    addSingleGroupListener,
+    removeSingleGroupListener
+}

@@ -73,13 +73,11 @@ export default {
             })
         })
     },
-    addGroup(params, listener) {
+    addGroup(params) {
         return new Promise((res, rej) => {
             socket.emit('addGroup', params)
             socket.once('addGroup', data => {
                 if (data.msg || data.message) return rej(data)
-
-                socket.on(params.groupId, listener)
                 return res(data)
             })
         })
@@ -116,7 +114,6 @@ export default {
     },
     removeGroup(params) {
         return new Promise((res, rej) => {
-            socket.removeAllListeners(params.groupId)
             socket.emit('removeGroup', params)
             socket.once('removeGroup', data => {
                 if (data.msg || data.message) return rej(data)
