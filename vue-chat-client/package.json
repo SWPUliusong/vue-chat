@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "node build/dev-server.js",
     "start": "pm2 start build/dev-server.js --name vue-chat-client -e error.log -o access.log",
-    "stop": "pm2 stop vue-chat-client",
+    "stop": "pm2 delete vue-chat-client",
     "restart": "pm2 restart vue-chat-client -e error.log -o access.log",
     "build": "node build/build.js"
   },

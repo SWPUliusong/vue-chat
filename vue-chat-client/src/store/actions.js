@@ -25,7 +25,7 @@ export default {
             commit('setUser', { user })
         })
     },
-    signUp({ commit }, payload) {
+    signUp({ commit, state }, payload) {
         return ws.signUp(payload).then(user => {
             addUserListener(user, state)
             addGroupsListener(user, state)
