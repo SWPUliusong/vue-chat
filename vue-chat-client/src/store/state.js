@@ -9,5 +9,6 @@ export default {
     isChange: true,    // 决定消息的更新方式是增加还是重新赋值
     messages: [],    // 消息记录
     count: '',  // 消息个数
-    faces   // 表情
+    faces,   // 表情
+    facesShow: false    // 是否显示泡泡表情
 }

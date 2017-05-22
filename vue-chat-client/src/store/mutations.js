@@ -51,5 +51,11 @@ export default {
     },
     pushMsg(state, msg) {
         state.messages.push(msg)
+    },
+    toggleFaces(state) {
+        state.facesShow = !state.facesShow
+    },
+    hiddenFaces(state) {
+        state.facesShow = false
     }
 }

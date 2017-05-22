@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" @click="hiddenFaces">
     <template v-if="!!user">
       <sider-left></sider-left>
       <sider-right></sider-right>
@@ -9,15 +9,20 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-  import siderLeft from './components/sider-left'
-  import siderRight from './components/sider-right'
-  import signinAndSignup from './components/signinAndSignup'
+import { mapState } from 'vuex'
+import siderLeft from './components/sider-left'
+import siderRight from './components/sider-right'
+import signinAndSignup from './components/signinAndSignup'
 
-  export default {
-    computed: mapState(['user']),
-    components: { siderLeft, siderRight, signinAndSignup }
+export default {
+  computed: mapState(['user']),
+  components: { siderLeft, siderRight, signinAndSignup },
+  methods: {
+    hiddenFaces() {
+      this.$store.commit('hiddenFaces')
+    }
   }
+}
 </script>
 
 <style>
@@ -25,18 +30,18 @@
   margin: 0 auto;
   width: 80%;
   height: 100%;
-  background: rgba(240,240,240,.6);
+  background: rgba(240, 240, 240, .6);
   display: flex;
 }
+
 @media(max-width: 1000px) {
-    #app {
-        margin: 0;
-        width: 100%;
-    }
+  #app {
+    margin: 0;
+    width: 100%;
+  }
 }
 
 .iconfont {
   font-size: 22px;
 }
-
 </style>

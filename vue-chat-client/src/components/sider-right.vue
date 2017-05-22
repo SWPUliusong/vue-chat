@@ -4,10 +4,7 @@
             <div class="avatar-area clearfix">
                 <span @mouseleave="showMember=false">
                     {{currentOne.name}}
-                    <i class="link"
-                    @mouseenter="getGroupMember"
-                    v-if="activeList == 'groups'" 
-                    :class="showMember?'el-icon-caret-top':'el-icon-caret-bottom'"></i>
+                    <i class="link" @mouseenter="getGroupMember" v-if="activeList == 'groups'" :class="showMember?'el-icon-caret-top':'el-icon-caret-bottom'"></i>
                 </span>
                 <p class="pull-right padding-right-15">
                     <el-button @click="quit" type="danger">{{activeList=='friends'?'删除好友':'退出群组'}}</el-button>
@@ -45,7 +42,7 @@
         <div class="message-input">
             <div class="message-options clearfix">
                 <div class="pull-left options options-face">
-                    <img @click="facesShow=!facesShow" class="link" src="/img/paopao/face.png">
+                    <img @click.stop="toggleFaces" class="link" src="/img/paopao/face.png">
                     <div class="faces-list" v-show="facesShow">
                         <img @click="chooseFace(face)" v-for="face in faces" :src="face">
                     </div>
@@ -80,16 +77,18 @@ export default {
             notMore: false,     // 没有更多消息
             showMember: false,  // 是否显示成员
             members: '',    // 成员
-            facesShow: false    // 是否显示泡泡表情
         }
     },
     computed: {
         length() {
             return this.$store.state.messages.length
         },
-        ...mapState(['user', 'currentOne', 'messages', 'activeList', 'faces'])
+        ...mapState(['user', 'currentOne', 'messages', 'activeList', 'faces', 'facesShow'])
     },
     methods: {
+        toggleFaces() {
+            this.$store.commit('toggleFaces')
+        },
         breakLine($e) {
             this.content = this.content + '\n'
             let txt = $e.target
@@ -131,7 +130,6 @@ export default {
         chooseFace(face) {
             let inputElem = document.getElementById('message-content')
             let img = `<img src="${face}">`
-            this.facesShow = false
             this.submitMsg(img)
             inputElem.focus()
         },
