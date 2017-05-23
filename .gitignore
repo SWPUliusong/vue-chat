@@ -9,5 +9,5 @@ yarn-error.log*
 temp/
 
 # 日志文件
-error.log
-access.log
+error*.log
+access*.log
