@@ -1,0 +1,1 @@
+cd ./vue-chat-server && npm i && cd ../vue-chat-client && npm i
