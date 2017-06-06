@@ -98,7 +98,7 @@ export default {
             let ctt = content || this.content
             if (!ctt) return
             this.isBeingGetMore = false
-            this.$store.dispatch('pushMsg', ctt)
+            this.$store.dispatch('pushMsg', ctt.replace(/</g, '&lt;').replace(/&lt;img/g, '<img'))
             if (ctt == this.content) {
                 this.content = ''
             }

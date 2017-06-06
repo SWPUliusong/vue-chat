@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "node app",
-    "start": "pm2 start app.js --name vue-chat-server -e error.log -o access.log",
-    "restart": "pm2 restart vue-chat-server -e error.log -o access.log",
+    "start": "pm2 start app.js --name vue-chat-server -e ../error.log -o ../access.log",
+    "restart": "pm2 restart vue-chat-server -e ../error.log -o ../access.log",
     "stop": "pm2 delete vue-chat-server"
   },
   "author": "",
